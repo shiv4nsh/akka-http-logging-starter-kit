@@ -12,7 +12,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http-core" % akkaV,
   "com.typesafe.akka" %% "akka-http-experimental" % akkaV,
   "com.typesafe.akka" %% "akka-http-testkit" % akkaV % "test",
-  "com.typesafe.akka" %% "akka-http-spray-json-experimental" % akkaV
+  "com.typesafe.akka" %% "akka-http-spray-json-experimental" % akkaV,
+   "pl.project13.scala" %% "rainbow" % "0.2"
 )
 
 ivyScala := ivyScala.value map {

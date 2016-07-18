@@ -36,6 +36,7 @@ trait KnoldusRoutingService {
       path("logMe") {
         complete {
           try {
+            Thread.sleep(10000)
             HttpResponse(StatusCodes.OK, entity = s"Hey this request has been logged :)")
           }
           catch {

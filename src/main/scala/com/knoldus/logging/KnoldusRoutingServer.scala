@@ -14,7 +14,9 @@ import akka.http.scaladsl.server.RouteResult.Complete
 import akka.stream.{Materializer, ActorMaterializer}
 import com.knoldus.logging.routes.KnoldusRoutingService
 import akka.http.scaladsl.server.directives.{LoggingMagnet, LogEntry, DebuggingDirectives}
+import pl.project13.scala.rainbow.Rainbow
 import scala.concurrent.ExecutionContext.Implicits.global
+import Rainbow._
 
 import scala.concurrent.ExecutionContext
 
@@ -26,22 +28,29 @@ class KnoldusRoutingServer(implicit val system: ActorSystem,
   }
 
   def requestMethodAndResponseStatusAsInfo(level: LogLevel, route: Route)
-                                          (implicit m: Materializer, ex: ExecutionContext): Route = {
+                                          (implicit m: Materializer, ex: ExecutionContext) = {
 
-    DebuggingDirectives.logRequestResult(LoggingMagnet(log => {
-      val requestTimestamp = System.currentTimeMillis()
-      akkaResponseTimeLoggingFunction(log, requestTimestamp)
-    }))(route)
     def akkaResponseTimeLoggingFunction(loggingAdapter: LoggingAdapter, requestTimestamp: Long)(req: HttpRequest)(res: Any): Unit = {
       val entry = res match {
         case Complete(resp) =>
           val responseTimestamp: Long = System.currentTimeMillis()
           val elapsedTime: Long = responseTimestamp - requestTimestamp
-          LogEntry("Logged Request:" + req.method + ":" + req.uri + ":" + resp.status + ":" + elapsedTime, level)
-        case anythingElse: _ =>
+          val loggingString = "Logged Request:" + req.method + ":" + req.uri + ":" + resp.status + ":" + elapsedTime
+          val coloredLoggingString = if (elapsedTime > 3000) {
+            loggingString.red
+          } else {
+            loggingString.green
+          }
+          LogEntry(coloredLoggingString, level)
+        case anythingElse =>
           LogEntry(s"$anythingElse", level)
       }
       entry.logTo(loggingAdapter)
     }
+    DebuggingDirectives.logRequestResult(LoggingMagnet(log => {
+      val requestTimestamp = System.currentTimeMillis()
+      akkaResponseTimeLoggingFunction(log, requestTimestamp)
+    }))(route)
+
   }
 }
