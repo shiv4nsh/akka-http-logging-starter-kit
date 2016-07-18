@@ -36,7 +36,7 @@ class KnoldusRoutingServer(implicit val system: ActorSystem,
           val responseTimestamp: Long = System.currentTimeMillis()
           val elapsedTime: Long = responseTimestamp - requestTimestamp
           val loggingString = "Logged Request:" + req.method + ":" + req.uri + ":" + resp.status + ":" + elapsedTime
-          val coloredLoggingString = if (elapsedTime > 3000) {
+          val coloredLoggingString = if (elapsedTime > StartApp.thresholdValue) {
             loggingString.red
           } else {
             loggingString.green

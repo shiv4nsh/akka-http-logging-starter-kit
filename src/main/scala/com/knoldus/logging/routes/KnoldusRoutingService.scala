@@ -23,6 +23,7 @@ trait KnoldusRoutingService {
   implicit val materializer: ActorMaterializer
   val logger = Logging(system, getClass)
 
+  val TIME_ELAPSED = 10000
   implicit def myExceptionHandler =
     ExceptionHandler {
       case e: ArithmeticException =>
@@ -33,11 +34,24 @@ trait KnoldusRoutingService {
 
   val routes: Route = {
     get {
-      path("logMe") {
+      path("lessTime") {
         complete {
           try {
-            Thread.sleep(10000)
-            HttpResponse(StatusCodes.OK, entity = s"Hey this request has been logged :)")
+            HttpResponse(StatusCodes.OK, entity = s"Hey this request has been logged with green Color:)")
+          }
+          catch {
+            case ex: Throwable =>
+              logger.error(ex, ex.getMessage)
+              HttpResponse(StatusCodes.InternalServerError, entity = s"Error found")
+          }
+        }
+      }
+    } ~ get {
+      path("moreTime") {
+        complete {
+          try {
+            Thread.sleep(TIME_ELAPSED)
+            HttpResponse(StatusCodes.OK, entity = s"Hey this request has been logged with red Color :)")
           }
           catch {
             case ex: Throwable =>

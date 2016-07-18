@@ -18,5 +18,6 @@ object StartApp {
   val config = ConfigFactory.load()
   val serverUrl = config.getString("http.interface")
   val port = config.getInt("http.port")
+  val thresholdValue=config.getInt("http.thresholdValue")
   server.startServer(serverUrl, port)
 }
