@@ -6,7 +6,7 @@ This project contains the basic info about how to log the Client request and the
 This project uses :
 
 1. [Akka-http](http://doc.akka.io/docs/akka/2.4.8/scala.html)
-2. [sala-rainbow](https://github.com/ktoso/scala-rainbow)
+2. [scala-rainbow](https://github.com/ktoso/scala-rainbow)
 3. And a little hack ;)
 
 ## How to Run:
